@@ -19,6 +19,41 @@ export interface AppConfig {
   theme: Theme
 }
 
+// Knowledge Search Assistant Types
+export interface KnowledgeDocument {
+  id: string
+  name: string
+  pageCount: number
+  uploadDate: string
+  processingStatus: 'uploading' | 'processing' | 'complete' | 'error'
+  size: number
+}
+
+export interface Message {
+  id: string
+  type: 'user' | 'assistant'
+  content: string
+  timestamp: string
+  answer?: string
+  sources?: Source[]
+  confidence?: 'High' | 'Medium' | 'Low'
+  sourceContext?: string
+}
+
+export interface Source {
+  documentName: string
+  pageNumber: number
+  relevanceScore: number
+  matchingText: string
+}
+
+export interface ChatResponse {
+  answer: string
+  sources: string[]
+  confidence: 'High' | 'Medium' | 'Low'
+  sourceContext: string
+}
+
 // =============================================================================
 // SSE Event Types for Lyra Chat
 // =============================================================================

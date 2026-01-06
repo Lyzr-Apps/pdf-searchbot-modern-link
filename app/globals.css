@@ -92,3 +92,78 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Knowledge Search Assistant Custom Styles */
+@layer components {
+  .chat-message-enter {
+    @apply animate-in fade-in slide-in-from-bottom-2 duration-300;
+  }
+
+  .typing-indicator {
+    @apply flex gap-1;
+  }
+
+  .typing-dot {
+    @apply w-2 h-2 bg-gray-500 rounded-full animate-bounce;
+  }
+
+  .source-badge {
+    @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full;
+  }
+
+  .confidence-badge-high {
+    @apply bg-green-900/50 text-green-300;
+  }
+
+  .confidence-badge-medium {
+    @apply bg-yellow-900/50 text-yellow-300;
+  }
+
+  .confidence-badge-low {
+    @apply bg-orange-900/50 text-orange-300;
+  }
+
+  .chat-input-focus {
+    @apply focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.7);
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-color: rgba(100, 100, 100, 0.5) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
+
+/* Animations */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s infinite;
+}

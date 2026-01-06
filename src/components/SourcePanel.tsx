@@ -5,7 +5,7 @@ import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { Source } from '@/types'
 
 interface SourcePanelProps {
-  sources: Source[]
+  sources: (string | Source)[]
   sourceContext?: string
 }
 

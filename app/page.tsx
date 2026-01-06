@@ -68,15 +68,24 @@ function KnowledgeSearchApp() {
       const response = await sendMessage(query)
 
       if (response) {
+        // Ensure answer is a string
+        const answerText = typeof response.answer === 'string' ? response.answer : String(response.answer || '')
+
+        // Handle sources - can be array of strings or objects
+        let sourcesArray: any[] = []
+        if (Array.isArray(response.sources)) {
+          sourcesArray = response.sources
+        }
+
         const assistantMsg: MessageType = {
           id: (Date.now() + 1).toString(),
           type: 'assistant',
-          content: query,
+          content: answerText,
           timestamp: new Date().toISOString(),
-          answer: response.answer,
-          sources: response.sources as any[],
-          confidence: response.confidence,
-          sourceContext: response.sourceContext,
+          answer: answerText,
+          sources: sourcesArray,
+          confidence: response.confidence || 'Medium',
+          sourceContext: response.sourceContext || '',
         }
 
         addMessage(assistantMsg)

@@ -35,8 +35,8 @@ export interface Message {
   content: string
   timestamp: string
   answer?: string
-  sources?: Source[]
-  confidence?: 'High' | 'Medium' | 'Low'
+  sources?: (string | Source)[]
+  confidence?: 'High' | 'Medium' | 'Low' | string
   sourceContext?: string
 }
 
@@ -49,8 +49,8 @@ export interface Source {
 
 export interface ChatResponse {
   answer: string
-  sources: string[]
-  confidence: 'High' | 'Medium' | 'Low'
+  sources: (string | Source)[]
+  confidence: 'High' | 'Medium' | 'Low' | string
   sourceContext: string
 }
 

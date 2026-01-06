@@ -32,19 +32,44 @@ export async function sendMessageToAgent(
     const data = await response.json()
 
     // Handle the response structure from the API
-    let responseData = data
+    let answer = ''
+    let sources: any[] = []
+    let confidence = 'Medium'
+    let sourceContext = ''
 
-    // If response is nested in data.response object, unwrap it
-    if (data.response && typeof data.response === 'object' && !Array.isArray(data.response)) {
-      responseData = data.response
+    // Check if we have a response object
+    if (data.response) {
+      if (typeof data.response === 'string') {
+        // Plain text response from agent
+        answer = data.response
+      } else if (typeof data.response === 'object' && !Array.isArray(data.response)) {
+        // Response is a parsed object
+        answer = data.response.answer || data.response.result || data.response.message || JSON.stringify(data.response)
+        sources = Array.isArray(data.response.sources) ? data.response.sources : []
+        confidence = data.response.confidence || 'Medium'
+        sourceContext = data.response.sourceContext || ''
+      }
+    } else if (data.answer) {
+      // Answer is at top level
+      answer = data.answer
+      sources = Array.isArray(data.sources) ? data.sources : []
+      confidence = data.confidence || 'Medium'
+      sourceContext = data.sourceContext || ''
+    } else if (typeof data === 'string') {
+      // Entire response is a string
+      answer = data
     }
 
-    // Parse the agent response, with fallbacks
+    // Fallback if no answer was found
+    if (!answer) {
+      answer = 'Unable to process response'
+    }
+
     return {
-      answer: responseData.answer || responseData.result || typeof responseData === 'string' ? String(responseData) : 'Unable to process response',
-      sources: Array.isArray(responseData.sources) ? responseData.sources : [],
-      confidence: responseData.confidence || 'Medium',
-      sourceContext: responseData.sourceContext || '',
+      answer: String(answer),
+      sources: sources,
+      confidence: (confidence === 'High' || confidence === 'Medium' || confidence === 'Low' ? confidence : 'Medium') as 'High' | 'Medium' | 'Low' | string,
+      sourceContext: String(sourceContext),
     }
   } catch (error) {
     console.error('Error sending message to agent:', error)

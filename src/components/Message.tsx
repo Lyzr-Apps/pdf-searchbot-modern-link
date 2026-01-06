@@ -39,7 +39,9 @@ export function Message({ message, isLoading }: MessageProps) {
           }`}
         >
           <p className="text-sm leading-relaxed">
-            {isUser ? message.content : (displayedText || message.content)}
+            {isUser
+              ? String(message.content)
+              : String(displayedText || message.content || 'No response')}
           </p>
 
           {!isUser && isLoading && (
@@ -50,7 +52,7 @@ export function Message({ message, isLoading }: MessageProps) {
             </div>
           )}
 
-          {!isUser && message.confidence && (
+          {!isUser && message.confidence && typeof message.confidence === 'string' && (
             <div className="mt-3 flex items-center gap-2">
               <span className="text-xs text-gray-400">Confidence:</span>
               <span
@@ -62,7 +64,7 @@ export function Message({ message, isLoading }: MessageProps) {
                     : 'bg-orange-900/50 text-orange-300'
                 }`}
               >
-                {message.confidence}
+                {String(message.confidence)}
               </span>
             </div>
           )}

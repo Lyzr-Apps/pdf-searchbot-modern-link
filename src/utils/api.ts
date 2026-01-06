@@ -31,12 +31,20 @@ export async function sendMessageToAgent(
 
     const data = await response.json()
 
-    // Parse the agent response
+    // Handle the response structure from the API
+    let responseData = data
+
+    // If response is nested in data.response object, unwrap it
+    if (data.response && typeof data.response === 'object' && !Array.isArray(data.response)) {
+      responseData = data.response
+    }
+
+    // Parse the agent response, with fallbacks
     return {
-      answer: data.answer || data.response || '',
-      sources: data.sources || [],
-      confidence: data.confidence || 'Medium',
-      sourceContext: data.sourceContext || '',
+      answer: responseData.answer || responseData.result || typeof responseData === 'string' ? String(responseData) : 'Unable to process response',
+      sources: Array.isArray(responseData.sources) ? responseData.sources : [],
+      confidence: responseData.confidence || 'Medium',
+      sourceContext: responseData.sourceContext || '',
     }
   } catch (error) {
     console.error('Error sending message to agent:', error)

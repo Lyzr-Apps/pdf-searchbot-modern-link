@@ -34,29 +34,47 @@ export function SourcePanel({ sources, sourceContext }: SourcePanelProps) {
 
       {expanded && (
         <div className="border-t border-gray-700 p-3 space-y-3">
-          {sources.map((source, idx) => (
-            <div
-              key={idx}
-              className="bg-gray-900 rounded p-3 border border-gray-700 hover:border-gray-600 transition-colors"
-            >
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    {source.documentName}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    Page {source.pageNumber}
-                  </p>
+          {sources.map((source, idx) => {
+            // Handle if source is a string (simple citation format)
+            if (typeof source === 'string') {
+              return (
+                <div key={idx} className="bg-gray-900 rounded p-3 border border-gray-700">
+                  <p className="text-sm text-gray-300">{source}</p>
                 </div>
-                <div className="text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded">
-                  {Math.round(source.relevanceScore * 100)}%
+              )
+            }
+
+            // Handle if source is an object with proper structure
+            return (
+              <div
+                key={idx}
+                className="bg-gray-900 rounded p-3 border border-gray-700 hover:border-gray-600 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      {source.documentName || 'Unknown Document'}
+                    </p>
+                    {source.pageNumber && (
+                      <p className="text-xs text-gray-400">
+                        Page {source.pageNumber}
+                      </p>
+                    )}
+                  </div>
+                  {source.relevanceScore !== undefined && (
+                    <div className="text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded">
+                      {Math.round(source.relevanceScore * 100)}%
+                    </div>
+                  )}
                 </div>
+                {source.matchingText && (
+                  <p className="text-xs text-gray-300 line-clamp-3">
+                    {source.matchingText}
+                  </p>
+                )}
               </div>
-              <p className="text-xs text-gray-300 line-clamp-3">
-                {source.matchingText}
-              </p>
-            </div>
-          ))}
+            )
+          })}
 
           {sourceContext && (
             <div className="mt-3 pt-3 border-t border-gray-700">

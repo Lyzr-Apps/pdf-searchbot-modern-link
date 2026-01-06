@@ -28,13 +28,19 @@ export function ChatArea({
         <EmptyState onQuestionClick={onQuestionClick} />
       ) : (
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map(message => (
-            <Message
-              key={message.id}
-              message={message}
-              isLoading={false}
-            />
-          ))}
+          {messages.map(message => {
+            // Ensure message content is not an object
+            if (!message || typeof message !== 'object' || Array.isArray(message)) {
+              return null
+            }
+            return (
+              <Message
+                key={message.id}
+                message={message as any}
+                isLoading={false}
+              />
+            )
+          })}
           {isLoading && (
             <Message
               message={{
@@ -42,7 +48,7 @@ export function ChatArea({
                 type: 'assistant',
                 content: 'Searching your documents...',
                 timestamp: new Date().toISOString(),
-              }}
+              } as any}
               isLoading={true}
             />
           )}
